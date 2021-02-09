@@ -1,0 +1,1 @@
+docker build . -t vndovr/otus-sample:latest --no-cache

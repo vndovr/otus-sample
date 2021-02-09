@@ -1,0 +1,1 @@
+docker run -it -p 8080:8000 vndovr/otus-sample
