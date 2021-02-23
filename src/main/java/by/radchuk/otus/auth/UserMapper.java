@@ -1,7 +1,6 @@
-package by.radchuk.otus.user;
+package by.radchuk.otus.auth;
 
 import javax.enterprise.context.ApplicationScoped;
-
 import org.mapstruct.Mapper;
 
 /**
@@ -16,5 +15,5 @@ public interface UserMapper {
 
   UserDto asUserDto(User user);
 
-  UserDtoWithId asUserDtoWithId(User user);
+  User asUser(UserDto userDto);
 }

@@ -2,9 +2,9 @@ FROM fabric8/java-alpine-openjdk11-jre
 
 LABEL maintainer="Vladimir Radchuk <radchuk@hotmail.com>"
 
-RUN apk --no-cache add msttcorefonts-installer fontconfig && \
-    update-ms-fonts && \
-    fc-cache -f
+#RUN apk --no-cache add msttcorefonts-installer fontconfig && \
+#    update-ms-fonts && \
+#    fc-cache -f
 
 
 ENV JAVA_OPTIONS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"

@@ -1,11 +1,9 @@
-package by.radchuk.otus.user;
+package by.radchuk.otus.person;
 
 import lombok.Data;
 
 @Data
-public class UserDto {
-
-  String login;
+public class PersonDto {
 
   String firstName;
 
