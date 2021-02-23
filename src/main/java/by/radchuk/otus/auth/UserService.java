@@ -2,7 +2,6 @@ package by.radchuk.otus.auth;
 
 import java.time.Duration;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -12,8 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import by.radchuk.otus.system.jaxrs.ObjectNotFoundException;
+import by.radchuk.otus.system.jaxrs.UnauthorizedException;
 import io.quarkus.runtime.util.HashUtil;
-import io.quarkus.security.AuthenticationFailedException;
 
 @ApplicationScoped
 @Transactional
@@ -26,9 +25,7 @@ public class UserService {
   UserMapper userMapper;
 
   String getUser(String header) {
-    String token = header.split(" ")[1];
-    return Optional.ofNullable(cache.getIfPresent(token))
-        .orElseThrow(AuthenticationFailedException::new);
+    return cache.getIfPresent(header);
   }
 
   void createUser(UserDto dto) {
@@ -54,7 +51,7 @@ public class UserService {
       cache.put(token, user.getLogin());
       return new TokenDto(token);
     } else
-      throw new AuthenticationFailedException();
+      throw new UnauthorizedException();
   }
 
   void logout(String token) {

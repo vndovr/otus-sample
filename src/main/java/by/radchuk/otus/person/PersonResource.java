@@ -11,49 +11,96 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
+import by.radchuk.otus.system.jaxrs.Descriptions;
 
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 @Path("/persons")
+@Tag(name = "Persons API", description = "API for persons manipulations")
 public class PersonResource {
 
   @Inject
   PersonService personService;
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Returns the list of persons")
+  @APIResponses(value = {
+      @APIResponse(responseCode = "200", description = Descriptions.D200,
+          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = PersonDtoWithId.class))),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response getPersons() {
     return Response.ok(personService.getPersons()).build();
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
   @Path("/{id}")
+  @Operation(summary = "Returns the person identified by id")
+  @APIResponses(value = {
+      @APIResponse(responseCode = "200", description = Descriptions.D200,
+          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = PersonDtoWithId.class))),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response getPerson(@PathParam("id") long id) {
     return Response.ok(personService.getPerson(id)).build();
   }
 
   @POST
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Operation(summary = "Creates a new person")
+  @APIResponses(value = {
+      @APIResponse(responseCode = "200", description = Descriptions.D200,
+          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = PersonDtoWithId.class))),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response createPerson(PersonDto dto) {
     return Response.status(Status.CREATED).entity(personService.createPerson(dto)).build();
   }
 
   @PUT
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
   @Path("/{id}")
+  @Operation(summary = "Updates the person identified by id")
+  @APIResponses(value = {
+      @APIResponse(responseCode = "200", description = Descriptions.D200,
+          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = PersonDtoWithId.class))),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response updatePerson(@PathParam("id") long id, PersonDtoWithId dto) {
     dto.setId(id);
     return Response.ok(personService.updatePerson(dto)).build();
   }
 
   @DELETE
-  @Produces(MediaType.APPLICATION_JSON)
-  @Consumes(MediaType.APPLICATION_JSON)
   @Path("/{id}")
+  @Operation(summary = "Deletes the person identified by id")
+  @APIResponses(value = {@APIResponse(responseCode = "204", description = Descriptions.D200),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response deletePerson(@PathParam("id") long id) {
     personService.deletePerson(id);
     return Response.noContent().build();

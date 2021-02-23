@@ -1,17 +1,14 @@
-
 --------------------------
 -- information about users
 --------------------------
 
-CREATE SEQUENCE HIBERNATE_SEQUENCE;
-
-CREATE TABLE user(
+CREATE TABLE user_info (
     login VARCHAR(64) NOT NULL PRIMARY KEY,
     salt VARCHAR(8) NOT NULL,
     password VARCHAR(40) NOT NULL
 );
 
-CREATE TABLE user_profile(
+CREATE TABLE user_profile (
     login VARCHAR(64) NOT NULL PRIMARY KEY,
     firstname VARCHAR(64) NOT NULL,
     lastname VARCHAR(64) NOT NULL,
@@ -19,10 +16,10 @@ CREATE TABLE user_profile(
     version BIGINT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE person(
+CREATE TABLE person (
     id SERIAL NOT NULL PRIMARY KEY,
     firstname VARCHAR(64) NOT NULL,
-    lastname VARCHAR(64) NOT NULL,
+    lastname VARCHAR(64) NOT NULL
 );
 
 
