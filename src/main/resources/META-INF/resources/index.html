@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>getting-started - 1.0-SNAPSHOT</title>
+    <title>Otus-sample - 1.0-SNAPSHOT</title>
     <style>
         h1, h2, h3, h4, h5, h6 {
             margin-bottom: 0.5rem;
@@ -100,48 +100,62 @@
 <body>
 
 <div class="banner lead">
-    Your new Cloud-Native application is ready!
+    Otus example application
 </div>
 
 <div class="container">
     <div class="left-column">
-        <p class="lead"> Congratulations, you have created a new Quarkus application.</p>
+        <p class="lead">Backend for frontends. Apigateway.</p>
 
-        <h2>Why do you see this?</h2>
+<p>Add authentication and registration for users</p>
 
-        <p>This page is served by Quarkus. The source is in
-            <code>src/main/resources/META-INF/resources/index.html</code>.</p>
+<p>Implement a use case "Change and view data in user's profile". </p>
+<p>After user is registered he is able to get his profile data from a specific url. It is accessible only for this user
+and not available for other users</p>
 
-        <h2>What can I do from here?</h2>
+<h2>Outcome</h2>
+<ol>
+<li>Representation of architecture solution and interaction between services</li>
+<li>Installation guide (from helm). Specify a namespace</li>
+<li>Postman tests that covers following use-cases
+    <ul>
+	<li>registration of user 1</li>
+	<li>verification that profile can not be accessed without login</li>
+	<li>login of user 1</li>
+	<li>change the profile for user 1</li>
+	<li>verification that profile has changed</li>
+	<li>logout of user 1</li>
+	<li>registration of user 2</li>
+	<li>login of user 2</li>
+	<li>verification that user 2 has no access to edit profile of user 1</li>
+	</ul>
+</li>
+</ol>
 
-        <p>If not already done, run the application in <em>dev mode</em> using: <code>mvn quarkus:dev</code>.
-        </p>
-        <ul>
-          <li>Add REST resources, Servlets, functions and other services in <code>src/main/java</code>.</li>
-          <li>Your static assets are located in <code>src/main/resources/META-INF/resources</code>.</li>
-          <li>Configure your application in <code>src/main/resources/application.properties</code>.
-          </li>
-        </ul>
+<h2>What is important</h2>
+<ul>
+<li>usage for {{baseUrl}} as parameter</li>
+<li>arch.homework as an initial value</li>
+<li>random data in tests scenarios</li>
+<li>output of request/response data</li>
+</ul>
 
-        <h2>How do I get rid of this page?</h2>
-        <p>Just delete the <code>src/main/resources/META-INF/resources/index.html</code> file.</p>
+
     </div>
     <div class="right-column">
         <div class="right-section">
             <h3>Application</h3>
             <ul>
-                <li>GroupId: org.acme</li>
-                <li>ArtifactId: getting-started</li>
+                <li>GroupId: by.radchuk</li>
+                <li>ArtifactId: otus-sample</li>
                 <li>Version: 1.0-SNAPSHOT</li>
-                <li>Quarkus Version: 0.11.0</li>
             </ul>
         </div>
         <div class="right-section">
             <h3>Next steps</h3>
             <ul>
-                <li><a href="https://quarkus.io/guides/maven-tooling.html">Setup your IDE</a></li>
-                <li><a href="https://quarkus.io/guides/getting-started-guide.html">Getting started</a></li>
-                <li><a href="https://quarkus.io">Quarkus Web Site</a></li>
+                <li><a href="/swagger-ui/maven-tooling.html">Swagger</a></li>
+                <li><a href="/health">Health state</a></li>
             </ul>
         </div>
     </div>
