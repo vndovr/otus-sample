@@ -29,6 +29,7 @@ import by.radchuk.otus.system.jaxrs.RefDto;
 @ApplicationScoped
 public class OrderEventResource {
 
+  static String X_REQ_ID = "91cd5bb7-ec6b-4a41-8710-4bfcb62ceb10";
   static String ORDER_EVENT_ENTITY = Order.class.getName();
 
   @Inject
@@ -36,6 +37,22 @@ public class OrderEventResource {
 
   @Inject
   EventMapper eventMapper;
+
+  @Path("/{id}")
+  @GET
+  @Operation(summary = "Returns all events for the specific order")
+  @APIResponses(value = {
+      @APIResponse(responseCode = "200", description = Descriptions.D200,
+          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = OrderEventDto[].class))),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
+  public Response getOrderEvents(@PathParam("id") String id) {
+    return Response.ok(orderEventService.getEvents(id, eventMapper::asOrderEventDto)).build();
+  }
 
   @POST
   @Operation(summary = "Registers new order in the system")
@@ -74,22 +91,6 @@ public class OrderEventResource {
   }
 
   @Path("/{id}")
-  @GET
-  @Operation(summary = "Returns all events for the specific order")
-  @APIResponses(value = {
-      @APIResponse(responseCode = "200", description = Descriptions.D200,
-          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
-              schema = @Schema(implementation = OrderEventDto[].class))),
-      @APIResponse(responseCode = "400", description = Descriptions.D400),
-      @APIResponse(responseCode = "401", description = Descriptions.D401),
-      @APIResponse(responseCode = "403", description = Descriptions.D403),
-      @APIResponse(responseCode = "404", description = Descriptions.D404),
-      @APIResponse(responseCode = "500", description = Descriptions.D500)})
-  public Response getOrderEvents(@PathParam("id") String id) {
-    return Response.ok(orderEventService.getEvents(id, eventMapper::asOrderEventDto)).build();
-  }
-
-  @Path("/{id}")
   @DELETE
   @Operation(summary = "Cancels the order")
   @APIResponses(value = {@APIResponse(responseCode = "200", description = Descriptions.D200),
@@ -99,7 +100,7 @@ public class OrderEventResource {
       @APIResponse(responseCode = "404", description = Descriptions.D404),
       @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response cancelOrder(@PathParam("id") String id) {
-    orderEventService.createEvent(id, ORDER_EVENT_ENTITY, OrderEvents.cancelEvent(), null);
+    orderEventService.createEvent(id, ORDER_EVENT_ENTITY, OrderEvents.cancelEvent(), X_REQ_ID);
     return Response.ok().build();
   }
 
@@ -116,7 +117,7 @@ public class OrderEventResource {
       @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response submitOrder(@PathParam("id") String id, DescriptionDto dto) {
     return Response.ok(orderEventService.createEvent(id, ORDER_EVENT_ENTITY,
-        OrderEvents.sendToBilling(dto.getDescription()), null)).build();
+        OrderEvents.sendToBilling(dto.getDescription()), X_REQ_ID)).build();
   }
 }
 

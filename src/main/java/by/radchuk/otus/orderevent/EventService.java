@@ -14,9 +14,11 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import by.radchuk.otus.system.UserPrincipal;
 import by.radchuk.otus.system.jaxrs.RefDto;
+import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
 @Transactional
+@Slf4j
 class EventService {
 
   @Inject
@@ -34,8 +36,11 @@ class EventService {
 
   RefDto createEvent(String externalId, String entity, EventHolder data, String xReqId) {
     Event event = null;
+    log.info("createEvent() with eId {} and xReqID {}", externalId, xReqId);
     if (externalId != null && xReqId != null) {
-      event = Event.find("xReqId = ?1 and externalId = ?2", xReqId, externalId).singleResult();
+      event = (Event) Event.find("xReqId = ?1 and externalId = ?2", xReqId, externalId)
+          .singleResultOptional().orElse(null);
+      log.info("Event: {}", event);
     }
     if (event == null) {
       event = new Event();
