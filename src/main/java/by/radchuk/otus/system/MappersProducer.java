@@ -4,7 +4,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import org.mapstruct.factory.Mappers;
 import by.radchuk.otus.auth.UserMapper;
-import by.radchuk.otus.person.PersonMapper;
+import by.radchuk.otus.order.OrderMapper;
+import by.radchuk.otus.orderevent.EventMapper;
 import by.radchuk.otus.profile.ProfileMapper;
 
 @ApplicationScoped
@@ -24,7 +25,14 @@ public class MappersProducer {
 
   @Produces
   @ApplicationScoped
-  public PersonMapper personMapper() {
-    return Mappers.getMapper(PersonMapper.class);
+  public EventMapper eventMapper() {
+    return Mappers.getMapper(EventMapper.class);
   }
+
+  @Produces
+  @ApplicationScoped
+  public OrderMapper orderMapper() {
+    return Mappers.getMapper(OrderMapper.class);
+  }
+
 }

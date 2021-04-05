@@ -7,8 +7,8 @@ import lombok.Data;
 @Schema(description = "DTO represents the user with information about ID and version")
 public class ProfileDto {
 
-  @Schema(description = "User's login")
-  String login;
+  @Schema(description = "User's id")
+  String userId;
 
   @Schema(description = "User's first name")
   String firstName;

@@ -15,7 +15,7 @@ import lombok.EqualsAndHashCode;
 public class Profile extends PanacheEntityBase {
 
   @Id
-  String login;
+  String userId;
 
   String firstName;
 

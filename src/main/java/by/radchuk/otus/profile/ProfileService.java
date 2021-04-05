@@ -33,7 +33,7 @@ public class ProfileService {
    * @return
    */
   ProfileDto updateProfile(ProfileDto dto) {
-    Profile profile = Optional.ofNullable((Profile) Profile.findById(dto.getLogin())).map(obj -> {
+    Profile profile = Optional.ofNullable((Profile) Profile.findById(dto.getUserId())).map(obj -> {
       profileMapper.asProfile(obj, dto);
       return obj;
     }).orElseGet(() -> profileMapper.asProfile(dto));

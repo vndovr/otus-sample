@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Consumes(MediaType.APPLICATION_JSON)
 @Path("/auth")
 @Slf4j
-@Tag(name = "Authorization API", description = "API for users manipulations")
+@Tag(name = "Authentication API", description = "API for users authorization")
 public class UserResource {
 
   @Inject
@@ -52,11 +52,13 @@ public class UserResource {
       throw new UnauthorizedException();
     }
     String user = userService.getUser(cookie.getValue());
+    String roles = userService.getRoles(cookie.getValue());
+
     log.info("Returned user: {}", user);
-    if (Objects.isNull(user)) {
+    if (Objects.isNull(user) || Objects.isNull(roles)) {
       throw new UnauthorizedException();
     }
-    return Response.ok().header("X-User", user).build();
+    return Response.ok().header("X-User", user).header("X-Roles", roles).build();
   }
 
   @POST

@@ -18,20 +18,28 @@ import io.quarkus.runtime.util.HashUtil;
 @Transactional
 public class UserService {
 
-  Cache<String, String> cache =
+  Cache<String, String> users =
+      CacheBuilder.newBuilder().expireAfterAccess(Duration.ofMinutes(5)).build();
+
+  Cache<String, String> roles =
       CacheBuilder.newBuilder().expireAfterAccess(Duration.ofMinutes(5)).build();
 
   @Inject
   UserMapper userMapper;
 
   String getUser(String header) {
-    return cache.getIfPresent(header);
+    return users.getIfPresent(header);
+  }
+
+  String getRoles(String header) {
+    return roles.getIfPresent(header);
   }
 
   void createUser(UserDto dto) {
     User user = userMapper.asUser(dto);
     user.setSalt(String.valueOf(RandomUtils.nextInt(10000, 99999)));
     user.setPassword(HashUtil.sha1("{" + user.getSalt() + "}" + user.getPassword()));
+    user.setRoles("user");
     User.persist(user);
   }
 
@@ -48,13 +56,15 @@ public class UserService {
     if (StringUtils.equals(user.getPassword(),
         HashUtil.sha1("{" + user.getSalt() + "}" + dto.getPassword()))) {
       String token = UUID.randomUUID().toString();
-      cache.put(token, user.getLogin());
+      users.put(token, user.getLogin());
+      roles.put(token, user.getRoles());
       return new TokenDto(token);
     } else
       throw new UnauthorizedException();
   }
 
   void logout(String token) {
-    cache.invalidate(token);
+    users.invalidate(token);
+    roles.invalidate(token);
   }
 }

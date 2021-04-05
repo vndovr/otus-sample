@@ -17,6 +17,7 @@ public class User extends PanacheEntityBase {
   String login;
 
   String salt;
-
   String password;
+
+  String roles;
 }
