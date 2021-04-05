@@ -58,7 +58,7 @@ public class OrderResource {
                 StringUtils.isBlank(state) ? null : Order.State.valueOf(state),
                 StringUtils.isBlank(sort) ? Sort.by("id")
                     : Sort.by(sort.charAt(0) == '-' ? sort.substring(1) : sort,
-                        sort.charAt(0) == '-' ? Direction.Ascending : Direction.Descending)))
+                        sort.charAt(0) == '-' ? Direction.Descending : Direction.Ascending)))
         .build();
   }
 

@@ -14,6 +14,7 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import by.radchuk.otus.system.UserPrincipal;
 import by.radchuk.otus.system.jaxrs.RefDto;
+import by.radchuk.otus.system.jaxrs.UpdateConflictException;
 import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
@@ -54,8 +55,9 @@ class EventService {
       event.setType(data.typeid());
       Event.persist(event);
       emitter.send(jsonb.toJson(eventMapper.asEventDto(event)));
+      return RefDto.valueOf(event.getExternalId());
     }
-    return RefDto.valueOf(event.getExternalId());
+    throw new UpdateConflictException();
   }
 
   <T> List<T> getEvents(String id, Function<Event, T> convertor) {
