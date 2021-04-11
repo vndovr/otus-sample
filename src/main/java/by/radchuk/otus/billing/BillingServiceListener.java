@@ -5,13 +5,16 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.bind.Jsonb;
 import javax.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import by.radchuk.otus.billing.Transaction.State;
 import by.radchuk.otus.order.Order;
+import by.radchuk.otus.system.Hostname;
 import io.smallrye.reactive.messaging.annotations.Blocking;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
@@ -40,9 +43,17 @@ public class BillingServiceListener {
   @RestClient
   AccountClient accountClient;
 
+  @Hostname
+  String hostname;
+
   @Incoming("billing-events-in")
   @Blocking
+  @SneakyThrows
   public void onMessage(String event) {
+
+    if (!StringUtils.containsIgnoreCase(hostname, "bill"))
+      return;
+
     log.info("Got billing event: {}", event);
     InvoiceDto dto = jsonb.fromJson(event, InvoiceDto.class);
     long transactionId = billingService.createTransaction(dto.getUserId(), "system",
