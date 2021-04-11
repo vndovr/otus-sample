@@ -26,7 +26,7 @@ public class Order extends PanacheEntityBase {
   private String id;
 
   enum State {
-    NEW, READY, BILLED, WAITING, SHIPPED, COMPLETED, CANCELED
+    NEW, READY, PAID, WAITING, SHIPPED, COMPLETED, CANCELED
   }
 
   private String userId;

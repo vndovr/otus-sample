@@ -7,14 +7,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.json.Json;
 import javax.json.bind.Jsonb;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import by.radchuk.otus.system.UserPrincipal;
+import by.radchuk.otus.system.exception.UpdateConflictException;
 import by.radchuk.otus.system.jaxrs.RefDto;
-import by.radchuk.otus.system.jaxrs.UpdateConflictException;
 import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
@@ -54,7 +55,11 @@ class EventService {
           StringUtils.isEmpty(externalId) ? UUID.randomUUID().toString() : externalId);
       event.setType(data.typeid());
       Event.persist(event);
-      emitter.send(jsonb.toJson(eventMapper.asEventDto(event)));
+      emitter.send(
+          Json.createObjectBuilder().add("xReqId", StringUtils.defaultString(event.getXReqId()))
+              .add("externalId", event.getExternalId()).add("entity", event.getEntity())
+              .add("type", event.getType()).add("data", event.getData())
+              .add("userId", event.getUserId()).build().toString());
       return RefDto.valueOf(event.getExternalId());
     }
     throw new UpdateConflictException();

@@ -1,4 +1,4 @@
-package by.radchuk.otus.system.jaxrs;
+package by.radchuk.otus.system.exception;
 
 public class UnknownEventException extends Exception {
 

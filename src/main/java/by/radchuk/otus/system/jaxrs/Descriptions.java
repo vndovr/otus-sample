@@ -22,6 +22,8 @@ public interface Descriptions {
   public static final String D404 =
       "The URI requested is invalid or the resource requested, does not exist.";
 
+  public static final String D409 = "The conflic occured during update of the entity.";
+
   public static final String D500 =
       "Internal Server Error. The service call has not succeeded. The string in the body may contain the details.";
 

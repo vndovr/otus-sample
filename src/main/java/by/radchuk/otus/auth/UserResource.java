@@ -22,8 +22,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 import org.jboss.resteasy.spi.HttpRequest;
+import by.radchuk.otus.system.exception.UnauthorizedException;
 import by.radchuk.otus.system.jaxrs.Descriptions;
-import by.radchuk.otus.system.jaxrs.UnauthorizedException;
 import lombok.extern.slf4j.Slf4j;
 
 @Produces(MediaType.APPLICATION_JSON)

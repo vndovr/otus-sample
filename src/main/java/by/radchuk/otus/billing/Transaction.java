@@ -1,7 +1,10 @@
-package by.radchuk.otus.notification;
+package by.radchuk.otus.billing;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
@@ -13,18 +16,25 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = false)
-@Table(name = "notification")
+@Table(name = "transaction")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Notification extends PanacheEntity {
+public class Transaction extends PanacheEntity {
 
-  String userId;
+  enum State {
+    NEW, PAID, FAIL
+  }
 
-  String email;
+  @Enumerated(EnumType.STRING)
+  State state;
 
-  String subject;
+  String creditAccount;
 
-  String body;
+  String debitAccount;
+
+  String orderId;
+
+  BigDecimal amount;
 
   @CreationTimestamp
   LocalDateTime createdAt;

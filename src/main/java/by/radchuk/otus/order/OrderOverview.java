@@ -47,6 +47,6 @@ public class OrderOverview extends PanacheEntityBase {
     this.price = order.getItems() == null || order.getItems().isEmpty() ? BigDecimal.ZERO
         : order.getItems().stream()
             .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-            .reduce(price, (x, y) -> x.add(y));
+            .reduce(BigDecimal.ZERO, (x, y) -> x.add(y));
   }
 }

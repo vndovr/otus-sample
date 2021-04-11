@@ -11,8 +11,7 @@ import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import org.apache.commons.lang3.StringUtils;
 import by.radchuk.otus.order.Order.State;
-import by.radchuk.otus.orderevent.EventDto;
-import by.radchuk.otus.system.jaxrs.UnknownEventException;
+import by.radchuk.otus.system.exception.UnknownEventException;
 import lombok.Setter;
 import lombok.SneakyThrows;
 
@@ -27,7 +26,8 @@ public class OrderVisitors {
 
   Map<String, Class<? extends OrderVisitor>> css = Map.of("order.event.create",
       CreateOrderVisitor.class, "order.event.cancel", CancelOrderVisitor.class, "order.event.amend",
-      AmendOrderVisitor.class, "order.event.ready", ReadyForBillingOrderVisitor.class);
+      AmendOrderVisitor.class, "order.event.ready", ReadyForBillingOrderVisitor.class,
+      "order.event.paid", PaidOrderVisitor.class, "order.event.fail", FailOrderVisitor.class);
 
   @SneakyThrows
   OrderVisitor from(EventDto dto) {
@@ -38,7 +38,6 @@ public class OrderVisitors {
     }
     return orderVisitor;
   }
-
 
   public static class CreateOrderVisitor implements OrderVisitor {
     @Override
@@ -56,6 +55,20 @@ public class OrderVisitors {
       if (o.getState().equals(State.NEW) || o.getState().equals(State.READY)) {
         o.setState(State.CANCELED);
       }
+    }
+  }
+
+  public static class PaidOrderVisitor implements OrderVisitor {
+    @Override
+    public void visit(Order o) {
+      o.setState(State.PAID);
+    }
+  }
+
+  public static class FailOrderVisitor implements OrderVisitor {
+    @Override
+    public void visit(Order o) {
+      o.setState(State.WAITING);
     }
   }
 

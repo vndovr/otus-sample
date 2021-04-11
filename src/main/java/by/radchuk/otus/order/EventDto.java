@@ -1,12 +1,11 @@
-package by.radchuk.otus.orderevent;
+package by.radchuk.otus.order;
 
-import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
 public class EventDto {
   String xReqId;
-  
+
   String externalId;
 
   String entity;
@@ -16,6 +15,4 @@ public class EventDto {
   String data;
 
   String userId;
-
-  LocalDateTime creationDate;
 }

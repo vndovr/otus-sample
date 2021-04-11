@@ -1,12 +1,12 @@
 package by.radchuk.otus.order;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Schema(description = "DTO represents normalized order")
+@Schema(description = "DTO represents overview of the order")
 public class OrderOverviewDto {
 
   @Schema(description = "order's identifier")
@@ -24,6 +24,6 @@ public class OrderOverviewDto {
   @Schema(description = "order's current state")
   private String state;
 
-  @Schema(description = "order's items")
-  private List<ItemDto> items;
+  @Schema(description = "order's price")
+  private BigDecimal price;
 }

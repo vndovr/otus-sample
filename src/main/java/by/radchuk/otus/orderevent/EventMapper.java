@@ -15,5 +15,4 @@ public interface EventMapper {
 
   OrderEventDto asOrderEventDto(Event event);
 
-  EventDto asEventDto(Event event);
 }

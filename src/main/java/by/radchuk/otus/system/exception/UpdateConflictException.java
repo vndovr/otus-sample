@@ -1,4 +1,4 @@
-package by.radchuk.otus.system.jaxrs;
+package by.radchuk.otus.system.exception;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response.Status;

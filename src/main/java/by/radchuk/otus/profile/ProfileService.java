@@ -4,7 +4,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import by.radchuk.otus.system.jaxrs.ObjectNotFoundException;
+import by.radchuk.otus.system.exception.ObjectNotFoundException;
 import io.quarkus.hibernate.orm.panache.Panache;
 
 @ApplicationScoped
