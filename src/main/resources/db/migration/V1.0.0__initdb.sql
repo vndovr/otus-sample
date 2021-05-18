@@ -40,7 +40,7 @@ CREATE TABLE account_event (
   creditaccount VARCHAR(64) NOT NULL,
   debitaccount VARCHAR(64) NOT NULL,
   amount DECIMAL(15,2) NOT NULL,
-  rolledbak BOOLEAN NOT NULL,
+  rolledback BOOLEAN NOT NULL,
   createdat TIMESTAMP NOT NULL
 );
 
