@@ -22,6 +22,14 @@ public class Profile extends PanacheEntityBase {
   String lastName;
 
   String email;
+  
+  String city;
+  
+  String postalCode;
+  
+  String addressLine;
+  
+  String phone;
 
   @Version
   long version;

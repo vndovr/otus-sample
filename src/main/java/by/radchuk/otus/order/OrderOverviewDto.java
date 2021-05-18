@@ -18,6 +18,9 @@ public class OrderOverviewDto {
   @Schema(description = "order's creation date")
   private LocalDateTime creationDate;
 
+  @Schema(description = "order's delivery time")
+  private LocalDateTime deliveryTime;
+
   @Schema(description = "order's description")
   private String description;
 

@@ -2,6 +2,7 @@ package by.radchuk.otus.billing;
 
 import java.math.BigDecimal;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -20,4 +21,8 @@ public interface AccountClient {
   public Response transfer(@PathParam("creditAccount") String creditAccount,
       @PathParam("debitAccount") String debitAccount, @PathParam("amount") BigDecimal amount,
       @PathParam("xReqId") String xReqId);
+
+  @Path("/{xReqId}")
+  @DELETE
+  public Response rollback(@PathParam("xReqId") String xReqId);
 }

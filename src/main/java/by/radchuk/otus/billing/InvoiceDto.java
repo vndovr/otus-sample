@@ -1,6 +1,7 @@
 package by.radchuk.otus.billing;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +21,12 @@ public class InvoiceDto {
 
   @Schema(description = "amount of money requested")
   BigDecimal amount;
+
+  @Schema(description = "order description")
+  String description;
+
+  @Schema(description = "order's delivery time")
+  LocalDateTime deliveryTime;
 
   ReservationDto[] items;
 }

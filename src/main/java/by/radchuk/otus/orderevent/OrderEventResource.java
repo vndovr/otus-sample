@@ -1,5 +1,6 @@
 package by.radchuk.otus.orderevent;
 
+import java.time.LocalDateTime;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -115,9 +116,14 @@ public class OrderEventResource {
       @APIResponse(responseCode = "403", description = Descriptions.D403),
       @APIResponse(responseCode = "404", description = Descriptions.D404),
       @APIResponse(responseCode = "500", description = Descriptions.D500)})
-  public Response submitOrder(@PathParam("id") String id, DescriptionDto dto) {
-    return Response.ok(orderEventService.createEvent(id, ORDER_EVENT_ENTITY,
-        OrderEvents.sendToBilling(dto.getDescription()), X_REQ_ID)).build();
+  public Response submitOrder(@PathParam("id") String id, DeliveryDetailsDto dto) {
+    LocalDateTime passed = dto.getDeliveryTime();
+    return Response
+        .ok(orderEventService.createEvent(id, ORDER_EVENT_ENTITY,
+            OrderEvents.sendToBilling(LocalDateTime.of(passed.getYear(), passed.getMonth(),
+                passed.getDayOfMonth(), passed.getHour(), 0), dto.getDescription()),
+            X_REQ_ID))
+        .build();
   }
 }
 

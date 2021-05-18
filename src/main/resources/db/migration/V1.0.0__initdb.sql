@@ -21,6 +21,10 @@ CREATE TABLE user_profile (
   firstname VARCHAR(64) NOT NULL,
   lastname VARCHAR(64) NOT NULL,
   email VARCHAR(64) NOT NULL,
+  city VARCHAR(64),
+  postalcode VARCHAR(6),
+  addressline VARCHAR(128),
+  phone VARCHAR(16),
   version INTEGER NOT NULL DEFAULT 0
 );
 
@@ -33,6 +37,10 @@ CREATE TABLE account (
 
 CREATE TABLE account_event (
   id VARCHAR(36) NOT NULL PRIMARY KEY,
+  creditaccount VARCHAR(64) NOT NULL,
+  debitaccount VARCHAR(64) NOT NULL,
+  amount DECIMAL(15,2) NOT NULL,
+  rolledbak BOOLEAN NOT NULL,
   createdat TIMESTAMP NOT NULL
 );
 
@@ -60,6 +68,7 @@ CREATE TABLE order_info (
   userid VARCHAR(64) NOT NULL,
   creationdate TIMESTAMP NOT NULL,
   description VARCHAR(1024),
+  deliverytime TIMESTAMP,
   state VARCHAR(16) NOT NULL
 );
 
@@ -79,6 +88,7 @@ CREATE TABLE order_overview (
   userid VARCHAR(64) NOT NULL,
   creationdate TIMESTAMP NOT NULL,
   description VARCHAR(1024),
+  deliverytime TIMESTAMP,
   state VARCHAR(16) NOT NULL,
   price DECIMAL(15,2) NOT NULL
 );
@@ -131,9 +141,9 @@ CREATE TABLE warehouse_product (
   version INTEGER NOT NULL
 );
 
-INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('1', 'Spinning reel Shimano Exage 2500', 10, 0, 0);
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('1', 'Spinning reel Shimano Exage 2500', 100, 0, 0);
 INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('2', 'Spinning rod Shimano Olivio 2.1m', 10, 0, 0);
-INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('3', 'Sprinnig rod Shimano Technium 2.7m', 10, 0, 0);
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('3', 'Sprinnig rod Shimano Technium 2.7m', 100, 0, 0);
 INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('4', 'Spinning reel Shimano Baitrunner 4000', 10, 0, 0);
 INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('5', 'Trout fishing box Flambeau', 10, 0, 0);
 

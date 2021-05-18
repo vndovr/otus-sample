@@ -43,7 +43,10 @@ enum BillingStateMachine {
     BillingStateMachine next(Transaction t, BillingStateMachineContext context) {
       try {
         context.getDeliveryClient()
-            .reserve(t.getCreatedAt().toLocalDate().format(DateTimeFormatter.ISO_DATE), t.getId());
+            .reserve(
+                context.getJsonb().fromJson(new StringReader(t.getEvent()), InvoiceDto.class)
+                    .getDeliveryTime().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")),
+                t.getId());
         return SUCC_MAIL;
       } catch (Exception e) {
         log.error(e.getMessage(), e);
@@ -70,7 +73,10 @@ enum BillingStateMachine {
     BillingStateMachine next(Transaction t, BillingStateMachineContext context) {
       try {
         context.getDeliveryClient()
-            .release(t.getCreatedAt().toLocalDate().format(DateTimeFormatter.ISO_DATE), t.getId());
+            .release(
+                context.getJsonb().fromJson(new StringReader(t.getEvent()), InvoiceDto.class)
+                    .getDeliveryTime().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")),
+                t.getId());
         return RESERVE_ROLL;
       } catch (Exception e) {
         log.error(e.getMessage(), e);
@@ -96,8 +102,7 @@ enum BillingStateMachine {
     @Override
     BillingStateMachine next(Transaction t, BillingStateMachineContext context) {
       try {
-        context.getAccountClient().transfer(t.getDebitAccount(), t.getCreditAccount(),
-            t.getAmount(), t.getId());
+        context.getAccountClient().rollback(t.getId());
         return FAIL_MAIL;
       } catch (Exception e) {
         log.error(e.getMessage(), e);

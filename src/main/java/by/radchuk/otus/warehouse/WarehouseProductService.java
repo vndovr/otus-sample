@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import by.radchuk.otus.system.exception.ObjectNotFoundException;
+import io.quarkus.panache.common.Sort;
 
 @ApplicationScoped
 @Transactional
@@ -23,7 +24,7 @@ public class WarehouseProductService {
    * @return
    */
   public List<WarehouseProductDto> getAll() {
-    List<WarehouseProduct> result = WarehouseProduct.listAll();
+    List<WarehouseProduct> result = WarehouseProduct.listAll(Sort.by("id"));
     return result.stream().map(obj -> warehouseProductMapper.asWarehouseProductDto(obj))
         .collect(Collectors.toList());
   }

@@ -5,6 +5,7 @@ import java.util.Objects;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -88,6 +89,24 @@ public class AccountResource {
       @PathParam("debitAccount") String debitAccount, @PathParam("amount") BigDecimal amount,
       @PathParam("xReqId") String xReqId) {
     accountService.transfer(creditAccount, debitAccount, amount, xReqId);
+    return Response.noContent().build();
+  }
+
+  @Path("/{xReqId}")
+  @DELETE
+  @Operation(summary = "(INTERNAL USE ONLY). Rolles back an existing transaction.")
+  @APIResponses(value = {
+      @APIResponse(responseCode = "204", description = Descriptions.D200,
+          content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
+              schema = @Schema(implementation = AmountDto.class))),
+      @APIResponse(responseCode = "400", description = Descriptions.D400),
+      @APIResponse(responseCode = "401", description = Descriptions.D401),
+      @APIResponse(responseCode = "403", description = Descriptions.D403),
+      @APIResponse(responseCode = "404", description = Descriptions.D404),
+      @APIResponse(responseCode = "409", description = Descriptions.D409),
+      @APIResponse(responseCode = "500", description = Descriptions.D500)})
+  public Response rollback(@PathParam("xReqId") String xReqId) {
+    accountService.rollback(xReqId);
     return Response.noContent().build();
   }
 }

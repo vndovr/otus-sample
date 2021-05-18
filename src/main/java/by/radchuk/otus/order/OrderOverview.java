@@ -29,6 +29,8 @@ public class OrderOverview extends PanacheEntityBase {
 
   private String description;
 
+  private LocalDateTime deliveryTime;
+
   @Enumerated(EnumType.STRING)
   private State state;
 
@@ -44,6 +46,7 @@ public class OrderOverview extends PanacheEntityBase {
     this.state = order.getState();
     this.creationDate = order.getCreationDate();
     this.description = order.getDescription();
+    this.deliveryTime = order.getDeliveryTime();
     this.price = order.getItems() == null || order.getItems().isEmpty() ? BigDecimal.ZERO
         : order.getItems().stream()
             .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))

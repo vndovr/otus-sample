@@ -1,6 +1,6 @@
 package by.radchuk.otus.delivery;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class DeliveryCounter extends PanacheEntityBase {
 
   @Id
-  LocalDate id;
+  LocalDateTime id;
 
   int counter;
 

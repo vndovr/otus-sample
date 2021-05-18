@@ -24,10 +24,13 @@ public class OrderVisitors {
   @Inject
   PriceList priceList;
 
-  Map<String, Class<? extends OrderVisitor>> css = Map.of("order.event.create",
-      CreateOrderVisitor.class, "order.event.cancel", CancelOrderVisitor.class, "order.event.amend",
-      AmendOrderVisitor.class, "order.event.ready", ReadyForBillingOrderVisitor.class,
-      "order.event.paid", PaidOrderVisitor.class, "order.event.fail", FailOrderVisitor.class);
+  Map<String, Class<? extends OrderVisitor>> css = Map.of(
+      "order.event.create", CreateOrderVisitor.class, 
+      "order.event.cancel", CancelOrderVisitor.class, 
+      "order.event.amend", AmendOrderVisitor.class, 
+      "order.event.ready", ReadyForBillingOrderVisitor.class,
+      "order.event.paid", PaidOrderVisitor.class, 
+      "order.event.fail", FailOrderVisitor.class);
 
   @SneakyThrows
   OrderVisitor from(EventDto dto) {
@@ -116,10 +119,14 @@ public class OrderVisitors {
     @Setter
     String description;
 
+    @Setter
+    LocalDateTime deliveryTime;
+
     @Override
     public void visit(Order o) {
       if (o.getState().equals(State.NEW)) {
         o.setDescription(description);
+        o.setDeliveryTime(deliveryTime);
         o.setState(State.READY);
       }
     }

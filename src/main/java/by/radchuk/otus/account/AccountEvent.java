@@ -1,5 +1,6 @@
 package by.radchuk.otus.account;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -21,6 +22,14 @@ public class AccountEvent extends PanacheEntityBase {
 
   @Id
   String id;
+
+  String creditAccount;
+
+  String debitAccount;
+  
+  BigDecimal amount;
+  
+  boolean rolledBack;
 
   @CreationTimestamp
   LocalDateTime createdAt;

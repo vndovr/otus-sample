@@ -35,6 +35,8 @@ public class Order extends PanacheEntityBase {
 
   private String description;
 
+  private LocalDateTime deliveryTime;
+
   @Enumerated(EnumType.STRING)
   private State state;
 

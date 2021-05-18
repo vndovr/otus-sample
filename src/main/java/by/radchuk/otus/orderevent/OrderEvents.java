@@ -1,5 +1,6 @@
 package by.radchuk.otus.orderevent;
 
+import java.time.LocalDateTime;
 import lombok.Getter;
 
 public class OrderEvents {
@@ -39,8 +40,11 @@ public class OrderEvents {
     };
   }
 
-  public static EventHolder sendToBilling(String _description) {
+  public static EventHolder sendToBilling(LocalDateTime _deliveryTime, String _description) {
     return new EventHolder() {
+
+      @Getter
+      LocalDateTime deliveryTime = _deliveryTime;
 
       @Getter
       String description = _description;

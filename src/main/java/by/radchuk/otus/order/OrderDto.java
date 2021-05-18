@@ -21,6 +21,9 @@ public class OrderDto {
   @Schema(description = "order's description")
   private String description;
 
+  @Schema(description = "order's deliveryTime")
+  private String deliveryTime;
+
   @Schema(description = "order's current state")
   private String state;
 

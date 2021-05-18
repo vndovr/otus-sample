@@ -1,6 +1,6 @@
 package by.radchuk.otus.delivery;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -57,7 +57,8 @@ public class DeliveryResource {
       @APIResponse(responseCode = "409", description = Descriptions.D409),
       @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response reserve(@PathParam("date") String date, @PathParam("xReqId") String xReqId) {
-    deliveryService.reserve(LocalDate.parse(date, DateTimeFormatter.ISO_DATE), xReqId);
+    deliveryService.reserve(LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyyMMddHHmm")),
+        xReqId);
     return Response.noContent().build();
   }
 
@@ -72,7 +73,8 @@ public class DeliveryResource {
       @APIResponse(responseCode = "409", description = Descriptions.D409),
       @APIResponse(responseCode = "500", description = Descriptions.D500)})
   public Response release(@PathParam("date") String date, @PathParam("xReqId") String xReqId) {
-    deliveryService.release(LocalDate.parse(date, DateTimeFormatter.ISO_DATE), xReqId);
+    deliveryService.release(LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyyMMddHHmm")),
+        xReqId);
     return Response.noContent().build();
   }
 

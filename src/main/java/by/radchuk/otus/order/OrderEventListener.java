@@ -66,8 +66,10 @@ public class OrderEventListener {
     if (orderOverview.getState().equals(State.READY)) {
       emitter.send(Json.createObjectBuilder().add("orderId", orderOverview.getId())
           .add("userId", orderOverview.getUserId())
-          .add("amount", orderOverview.getPrice().toString()).add("items", jsonArrayBuilder.build())
-          .build().toString());
+          .add("amount", orderOverview.getPrice().toString())
+          .add("description", orderOverview.getDescription())
+          .add("deliveryTime", orderOverview.getDeliveryTime().toString())
+          .add("items", jsonArrayBuilder.build()).build().toString());
     }
   }
 

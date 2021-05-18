@@ -19,6 +19,18 @@ public class ProfileDto {
   @Schema(description = "User's email")
   String email;
 
+  @Schema(description = "User's city")
+  String city;
+
+  @Schema(description = "User's postal code")
+  String postalCode;
+
+  @Schema(description = "User's address")
+  String addressLine;
+
+  @Schema(description = "User's phone")
+  String phone;
+
   @Schema(description = "Version for optimistic locking")
   long version;
 }

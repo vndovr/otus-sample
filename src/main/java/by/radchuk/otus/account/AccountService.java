@@ -8,9 +8,11 @@ import org.apache.commons.lang3.StringUtils;
 import by.radchuk.otus.system.exception.NotEnoughMoneyException;
 import by.radchuk.otus.system.exception.ObjectNotFoundException;
 import io.quarkus.hibernate.orm.panache.Panache;
+import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
 @Transactional
+@Slf4j
 public class AccountService {
 
   /**
@@ -21,6 +23,7 @@ public class AccountService {
   public AmountDto getAmount(String userId) {
     Account account = Optional.ofNullable((Account) Account.findById(userId))
         .orElseThrow(ObjectNotFoundException::new);
+    log.info("getAmount: {} - {}", userId, account.getAmount());
     return new AmountDto(account.getAmount());
   }
 
@@ -37,6 +40,7 @@ public class AccountService {
     account.setAmount(account.getAmount().add(dto.getAmount()));
     Account.persist(account);
     Panache.getEntityManager().flush();
+    log.info("updateAmount: {} - {}", userId, account.getAmount());
     return new AmountDto(account.getAmount());
   }
 
@@ -74,6 +78,8 @@ public class AccountService {
    */
   public void transfer(String creditAccount, String debitAccount, BigDecimal amount,
       String xReqId) {
+    log.info("transfer: {} - {} - {}", creditAccount, debitAccount, amount);
+    log.info("xReqID: {}", xReqId);
     if (StringUtils.isBlank(xReqId)) {
       throw new IllegalStateException();
     }
@@ -88,11 +94,44 @@ public class AccountService {
         throw new NotEnoughMoneyException();
       }
       accountTo.setAmount(accountTo.getAmount().add(amount));
-      Account.persist(accountFrom, accountTo);
-
       AccountEvent accountEvent = new AccountEvent();
       accountEvent.setId(xReqId);
-      accountEvent.persist();
+      accountEvent.setCreditAccount(creditAccount);
+      accountEvent.setDebitAccount(debitAccount);
+      accountEvent.setAmount(amount);
+      Account.persist(accountFrom, accountTo, accountEvent);
     }
+  }
+
+  /**
+   * Rollback the transaction
+   * 
+   * @return
+   */
+  public void rollback(String xReqId) {
+    if (StringUtils.isBlank(xReqId)) {
+      throw new IllegalStateException();
+    }
+    log.info("rollback: {}", xReqId);
+    Optional.ofNullable((AccountEvent) AccountEvent.findById(xReqId)).ifPresent(accountEvent -> {
+
+      log.info("{}", accountEvent);
+      if (accountEvent.isRolledBack())
+        return;
+
+      Account accountFrom =
+          Optional.ofNullable((Account) Account.findById(accountEvent.getDebitAccount()))
+              .orElseThrow(ObjectNotFoundException::new);
+      Account accountTo =
+          Optional.ofNullable((Account) Account.findById(accountEvent.getCreditAccount()))
+              .orElseThrow(ObjectNotFoundException::new);
+      accountFrom.setAmount(accountFrom.getAmount().add(accountEvent.getAmount().negate()));
+      if (accountFrom.getAmount().compareTo(BigDecimal.ZERO) == -1) {
+        throw new NotEnoughMoneyException();
+      }
+      accountTo.setAmount(accountTo.getAmount().add(accountEvent.getAmount()));
+      accountEvent.setRolledBack(true);
+      Account.persist(accountFrom, accountTo, accountEvent);
+    });
   }
 }
