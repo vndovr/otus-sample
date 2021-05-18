@@ -38,7 +38,7 @@ public class OrderResource {
   UserPrincipal userPrincipal;
 
   @GET
-  @Operation(summary = "Returns all orders for a specific user")
+  @Operation(summary = "Returns all orders with search criterias")
   @APIResponses(value = {
       @APIResponse(responseCode = "200", description = Descriptions.D200,
           content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,
@@ -64,7 +64,7 @@ public class OrderResource {
 
   @Path("/{id}")
   @GET
-  @Operation(summary = "Returns all orders for a specific user")
+  @Operation(summary = "Returns an order identified by id")
   @APIResponses(value = {
       @APIResponse(responseCode = "200", description = Descriptions.D200,
           content = @Content(mediaType = javax.ws.rs.core.MediaType.APPLICATION_JSON,

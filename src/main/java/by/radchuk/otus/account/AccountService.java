@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
+import org.apache.commons.lang3.StringUtils;
 import by.radchuk.otus.system.exception.NotEnoughMoneyException;
 import by.radchuk.otus.system.exception.ObjectNotFoundException;
 import io.quarkus.hibernate.orm.panache.Panache;
@@ -71,17 +72,27 @@ public class AccountService {
    * @param amount
    * @return
    */
-  public void transfer(String creditAccount, String debitAccount, BigDecimal amount) {
-    Account accountFrom = Optional.ofNullable((Account) Account.findById(creditAccount))
-        .orElseThrow(ObjectNotFoundException::new);
-    Account accountTo = Optional.ofNullable((Account) Account.findById(debitAccount))
-        .orElseThrow(ObjectNotFoundException::new);
-    accountFrom.setAmount(accountFrom.getAmount().add(amount.negate()));
-    if (accountFrom.getAmount().compareTo(BigDecimal.ZERO) == -1) {
-      throw new NotEnoughMoneyException();
+  public void transfer(String creditAccount, String debitAccount, BigDecimal amount,
+      String xReqId) {
+    if (StringUtils.isBlank(xReqId)) {
+      throw new IllegalStateException();
     }
-    accountTo.setAmount(accountTo.getAmount().add(amount));
-    Account.persist(accountFrom, accountTo);
-  }
+    if (!Optional.ofNullable((AccountEvent) AccountEvent.findById(xReqId)).isPresent()) {
 
+      Account accountFrom = Optional.ofNullable((Account) Account.findById(creditAccount))
+          .orElseThrow(ObjectNotFoundException::new);
+      Account accountTo = Optional.ofNullable((Account) Account.findById(debitAccount))
+          .orElseThrow(ObjectNotFoundException::new);
+      accountFrom.setAmount(accountFrom.getAmount().add(amount.negate()));
+      if (accountFrom.getAmount().compareTo(BigDecimal.ZERO) == -1) {
+        throw new NotEnoughMoneyException();
+      }
+      accountTo.setAmount(accountTo.getAmount().add(amount));
+      Account.persist(accountFrom, accountTo);
+
+      AccountEvent accountEvent = new AccountEvent();
+      accountEvent.setId(xReqId);
+      accountEvent.persist();
+    }
+  }
 }

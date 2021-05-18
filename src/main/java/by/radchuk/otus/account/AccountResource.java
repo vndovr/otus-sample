@@ -71,7 +71,7 @@ public class AccountResource {
     return Response.ok(accountService.updateAmount(userPrincipal.getLogin(), dto)).build();
   }
 
-  @Path("/{creditAccount}/{debitAccount}/{amount}")
+  @Path("/{creditAccount}/{debitAccount}/{amount}/{xReqId}")
   @POST
   @Operation(summary = "(INTERNAL USE ONLY). Moves money from one user account to another.")
   @APIResponses(value = {
@@ -84,9 +84,10 @@ public class AccountResource {
       @APIResponse(responseCode = "404", description = Descriptions.D404),
       @APIResponse(responseCode = "409", description = Descriptions.D409),
       @APIResponse(responseCode = "500", description = Descriptions.D500)})
-  public Response transfer(@PathParam("creditAccount") String creditAccount, @PathParam("debitAccount") String debitAccount,
-      @PathParam("amount") BigDecimal amount) {
-    accountService.transfer(creditAccount, debitAccount, amount);
+  public Response transfer(@PathParam("creditAccount") String creditAccount,
+      @PathParam("debitAccount") String debitAccount, @PathParam("amount") BigDecimal amount,
+      @PathParam("xReqId") String xReqId) {
+    accountService.transfer(creditAccount, debitAccount, amount, xReqId);
     return Response.noContent().build();
   }
 }

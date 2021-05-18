@@ -20,4 +20,6 @@ public class InvoiceDto {
 
   @Schema(description = "amount of money requested")
   BigDecimal amount;
+
+  ReservationDto[] items;
 }

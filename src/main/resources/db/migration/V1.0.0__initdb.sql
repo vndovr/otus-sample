@@ -31,6 +31,11 @@ CREATE TABLE account (
   version INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE account_event (
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
+  createdat TIMESTAMP NOT NULL
+);
+
 --- create system account - for money charge from user
 INSERT INTO account (userid, amount, version) VALUES ('system', 0, 0);
 INSERT INTO account (userid, amount, version) VALUES ('admin', 0, 0);
@@ -78,7 +83,6 @@ CREATE TABLE order_overview (
   price DECIMAL(15,2) NOT NULL
 );
 
-
 -- notification tables
 CREATE TABLE notification (
   id SERIAL NOT NULL PRIMARY KEY,
@@ -91,11 +95,47 @@ CREATE TABLE notification (
 
 -- transaction tables
 CREATE TABLE transaction (
-  id SERIAL NOT NULL PRIMARY KEY,
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
   state VARCHAR(16) NOT NULL,
   debitaccount VARCHAR(64) NOT NULL,
   creditaccount VARCHAR(64) NOT NULL,
   orderid VARCHAR(36) NOT NULL,
   amount DECIMAL(15,2) NOT NULL,
+  event VARCHAR(4096) NOT NULL,
   createdat TIMESTAMP NOT NULL
 );
+
+-- delivery tables
+CREATE TABLE delivery_event (
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
+  createdat TIMESTAMP NOT NULL
+);
+
+CREATE TABLE delivery_counter (
+  id DATE NOT NULL PRIMARY KEY,
+  counter INTEGER NOT NULL,
+  version INTEGER NOT NULL
+);
+
+-- warehouse tables
+CREATE TABLE warehouse_event (
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
+  createdat TIMESTAMP NOT NULL
+);
+
+CREATE TABLE warehouse_product (
+  id VARCHAR(36) NOT NULL PRIMARY KEY,
+  name VARCHAR(64) NOT NULL,
+  available INTEGER NOT NULL,
+  reserved INTEGER NOT NULL,
+  version INTEGER NOT NULL
+);
+
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('1', 'Spinning reel Shimano Exage 2500', 10, 0, 0);
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('2', 'Spinning rod Shimano Olivio 2.1m', 10, 0, 0);
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('3', 'Sprinnig rod Shimano Technium 2.7m', 10, 0, 0);
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('4', 'Spinning reel Shimano Baitrunner 4000', 10, 0, 0);
+INSERT INTO warehouse_product (id, name, available, reserved, version) VALUES ('5', 'Trout fishing box Flambeau', 10, 0, 0);
+
+
+

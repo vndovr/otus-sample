@@ -15,8 +15,9 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 @RegisterRestClient(configKey = "service.account-client")
 public interface AccountClient {
 
-  @Path("/{creditAccount}/{debitAccount}/{amount}")
+  @Path("/{creditAccount}/{debitAccount}/{amount}/{xReqId}")
   @POST
   public Response transfer(@PathParam("creditAccount") String creditAccount,
-      @PathParam("debitAccount") String debitAccount, @PathParam("amount") BigDecimal amount);
+      @PathParam("debitAccount") String debitAccount, @PathParam("amount") BigDecimal amount,
+      @PathParam("xReqId") String xReqId);
 }

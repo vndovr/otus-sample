@@ -42,4 +42,14 @@ public class ProfileService {
     return profileMapper.asProfileDto(profile);
   }
 
+  /**
+   * Updates the profile for user
+   * 
+   * @param dto
+   * @return
+   */
+  void deleteProfile(String userid) {
+    Profile.deleteById(userid);
+  }
+
 }

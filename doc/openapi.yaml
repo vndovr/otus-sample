@@ -1,0 +1,855 @@
+---
+openapi: 3.0.3
+info:
+  title: OTUS homework API
+  contact:
+    name: OTUS homework API Support
+    url: https://www.facebook.com/vladimir.radchuk
+    email: radchuk@hotmail.com
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: "1.0"
+security:
+- default: []
+tags:
+- name: Accounts API
+  description: API for accounts manipulations
+- name: Authentication API
+  description: API for users authorization
+- name: Events API
+  description: API for order events
+- name: Notifications API
+  description: API for notifications
+- name: Orders API
+  description: API for orders
+- name: Profiles API
+  description: API for profile manipulations
+- name: System API
+  description: API for system calls
+paths:
+  /accounts/self:
+    get:
+      tags:
+      - Accounts API
+      summary: Returns the amount of money on the account
+      parameters:
+      - name: userId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmountDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+    put:
+      tags:
+      - Accounts API
+      summary: Updates the amount of money (sum with what exists)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AmountDto'
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmountDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /accounts/{creditAccount}/{debitAccount}/{amount}:
+    post:
+      tags:
+      - Accounts API
+      summary: (INTERNAL USE ONLY). Moves money from one user account to another.
+      parameters:
+      - name: amount
+        in: path
+        required: true
+        schema:
+          type: number
+      - name: creditAccount
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: debitAccount
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AmountDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "409":
+          description: The conflic occured during update of the entity.
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /auth:
+    get:
+      tags:
+      - Authentication API
+      summary: Checks if user is already authenticated
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /auth/login:
+    post:
+      tags:
+      - Authentication API
+      summary: Login a user with login and password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /auth/logout:
+    post:
+      tags:
+      - Authentication API
+      summary: Logout user's session
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenDto'
+      responses:
+        "204":
+          description: 'The request has been successfully applied '
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /auth/register:
+    post:
+      tags:
+      - Authentication API
+      summary: Registers a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDto'
+      responses:
+        "201":
+          description: 'The request has been successfully applied '
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /auth/{id}:
+    delete:
+      tags:
+      - Authentication API
+      summary: Deletes the user identified by ID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "204":
+          description: 'The request has been successfully applied '
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /events/orders:
+    post:
+      tags:
+      - Events API
+      summary: Registers new order in the system
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /events/orders/{id}:
+    get:
+      tags:
+      - Events API
+      summary: Returns all events for the specific order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderEventDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+    post:
+      tags:
+      - Events API
+      summary: Submits the order for billing
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DescriptionDto'
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefDto'
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+    delete:
+      tags:
+      - Events API
+      summary: Cancels the order
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /events/orders/{id}/{itemId}/{quantity}:
+    post:
+      tags:
+      - Events API
+      summary: "Amends the order in the system, change the quantity (could be negative)\
+        \ for items for the specific itemId"
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: itemId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: quantity
+        in: path
+        required: true
+        schema:
+          format: int32
+          type: integer
+      - name: xReqId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /health:
+    get:
+      tags:
+      - System API
+      summary: Returns the health check for the system
+      parameters:
+      - name: user
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /notifications:
+    get:
+      tags:
+      - Notifications API
+      summary: Returns the notifications sent from system (for role 'admin' only)
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/NotificationDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /orders:
+    get:
+      tags:
+      - Orders API
+      summary: Returns all orders for a specific user
+      parameters:
+      - name: sort
+        in: query
+        schema:
+          type: string
+      - name: state
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /orders/{id}:
+    get:
+      tags:
+      - Orders API
+      summary: Returns all orders for a specific user
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /profiles:
+    get:
+      tags:
+      - Profiles API
+      summary: (INTERNAL USE ONLY). Returns the profile for specified user
+      parameters:
+      - name: userId
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+  /profiles/self:
+    get:
+      tags:
+      - Profiles API
+      summary: Returns the profile for current user
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+    put:
+      tags:
+      - Profiles API
+      summary: Updates the profile for current user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileDto'
+      responses:
+        "200":
+          description: 'The request has been successfully applied '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfileDto'
+        "400":
+          description: The request has not been applied because of invalid input parameters.
+        "401":
+          description: The request has not been applied because it lacks valid authentication
+            credentials for the target resource.
+        "403":
+          description: "The request is understood, but it has been refused or access\
+            \ is not allowed. 1) The code is returned in case of an issue exception.\
+            \ Please see RestIssueLog in the body 2) The user is suspended. The message\
+            \ in the body exists."
+        "404":
+          description: "The URI requested is invalid or the resource requested, does\
+            \ not exist."
+        "500":
+          description: Internal Server Error. The service call has not succeeded.
+            The string in the body may contain the details.
+components:
+  schemas:
+    AmountDto:
+      description: DTO represents the amount of money
+      type: object
+      properties:
+        amount:
+          description: Amount of money
+          type: number
+    UserDto:
+      description: DTO represents the user information
+      type: object
+      properties:
+        login:
+          description: User's login
+          type: string
+        password:
+          description: User's password
+          type: string
+    TokenDto:
+      description: DTO represtents the authorization token
+      type: object
+      properties:
+        token:
+          description: access token
+          type: string
+    HealthDto:
+      description: DTO represents health status
+      type: object
+      properties:
+        status:
+          description: status of the system
+          type: string
+    NotificationDto:
+      description: DTO represents the notification to the user
+      type: object
+      properties:
+        body:
+          description: notification body
+          type: string
+        createdAt:
+          format: date-time
+          description: time notification was created
+          type: string
+        email:
+          description: user's email
+          type: string
+        subject:
+          description: notification subject
+          type: string
+        userId:
+          description: user's id
+          type: string
+    OrderDto:
+      description: DTO represents normalized order
+      type: object
+      properties:
+        creationDate:
+          format: date-time
+          description: order's creation date
+          type: string
+        description:
+          description: order's description
+          type: string
+        id:
+          description: order's identifier
+          type: string
+        items:
+          allOf:
+          - $ref: '#/components/schemas/ListItemDto'
+          - description: order's items
+        state:
+          description: order's current state
+          type: string
+        userId:
+          description: user who created an order
+          type: string
+    ItemDto:
+      description: DTO represents single order item
+      type: object
+      properties:
+        itemId:
+          description: item's identifier
+          type: string
+        itemName:
+          description: item's name
+          type: string
+        price:
+          description: item's price
+          type: number
+        quantity:
+          format: int32
+          description: item's quantity
+          type: integer
+    ListItemDto:
+      type: array
+      items:
+        $ref: '#/components/schemas/ItemDto'
+    RefDto:
+      description: DTO with reference information about dependent object
+      type: object
+      properties:
+        id:
+          description: identifier for referenced object
+          type: string
+    OrderEventDto:
+      description: DTO represents information about order event
+      type: object
+      properties:
+        creationDate:
+          format: date-time
+          description: event's timestamp
+          type: string
+        data:
+          description: event's data
+          type: string
+        externalId:
+          description: order's identifier
+          type: string
+        type:
+          description: type of the event
+          type: string
+        userId:
+          description: user who created the event
+          type: string
+    DescriptionDto:
+      description: DTO represents information about order description
+      type: object
+      properties:
+        description:
+          description: description for the order
+          type: string
+    ProfileDto:
+      description: DTO represents the user with information about ID and version
+      type: object
+      properties:
+        email:
+          description: User's email
+          type: string
+        firstName:
+          description: User's first name
+          type: string
+        lastName:
+          description: User's last name
+          type: string
+        userId:
+          description: User's id
+          type: string
+        version:
+          format: int64
+          description: Version for optimistic locking
+          type: integer
+  securitySchemes:
+    default:
+      type: apiKey
+      description: Token that is returned after successfull login should be included
+        in the cookie token for all requests to the API calls
+      name: token
+      in: cookie

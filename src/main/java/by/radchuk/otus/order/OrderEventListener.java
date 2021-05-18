@@ -4,6 +4,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.bind.Jsonb;
 import javax.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +33,7 @@ public class OrderEventListener {
 
   @Hostname
   String hostname;
-  
+
   @Incoming("order-events-in")
   @Blocking
   public void onMessage(String event) {
@@ -57,10 +58,16 @@ public class OrderEventListener {
     Order.persist(orderOverview);
     Order.persist(order);
 
+
+    JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
+    order.getItems().stream().map(item -> Json.createObjectBuilder().add("itemId", item.getItemId())
+        .add("quantity", item.getQuantity()).build()).forEach(jsonArrayBuilder::add);
+
     if (orderOverview.getState().equals(State.READY)) {
       emitter.send(Json.createObjectBuilder().add("orderId", orderOverview.getId())
           .add("userId", orderOverview.getUserId())
-          .add("amount", orderOverview.getPrice().toString()).build().toString());
+          .add("amount", orderOverview.getPrice().toString()).add("items", jsonArrayBuilder.build())
+          .build().toString());
     }
   }
 

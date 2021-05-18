@@ -1,9 +1,9 @@
 package by.radchuk.otus.billing;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
-import javax.transaction.Transactional.TxType;
 import io.quarkus.hibernate.orm.panache.Panache;
 
 @ApplicationScoped
@@ -19,18 +19,30 @@ class BillingService {
    * @param amount
    * @return
    */
-  @Transactional(TxType.REQUIRES_NEW)
-  long createTransaction(String creditAccount, String debitAccount, String orderId,
-      BigDecimal amount) {
+  String createTransaction(String creditAccount, String debitAccount, String orderId,
+      BigDecimal amount, String event) {
     Transaction transaction = new Transaction();
+    transaction.setId(UUID.randomUUID().toString());
     transaction.setCreditAccount(creditAccount);
     transaction.setDebitAccount(debitAccount);
     transaction.setOrderId(orderId);
     transaction.setAmount(amount);
-    transaction.setState(Transaction.State.NEW);
+    transaction.setEvent(event);
+    transaction.setState(BillingStateMachine.NEW);
     Transaction.persist(transaction);
     Panache.getEntityManager().flush();
-    return transaction.id;
+    return transaction.getId();
+  }
+
+
+  /**
+   * Returns the transaction by id
+   * 
+   * @param id
+   * @return
+   */
+  Transaction getTransaction(String id) {
+    return Transaction.findById(id);
   }
 
   /**
@@ -39,8 +51,7 @@ class BillingService {
    * @param transactionId
    * @param state
    */
-  @Transactional(TxType.REQUIRES_NEW)
-  void updateState(long transactionId, Transaction.State state) {
+  void updateState(String transactionId, BillingStateMachine state) {
     Transaction transaction = Transaction.findById(transactionId);
     transaction.setState(state);
     Transaction.persist(transaction);
